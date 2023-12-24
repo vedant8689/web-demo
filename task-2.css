@@ -1,0 +1,61 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    color: #333;
+}
+
+form {
+    max-width: 800px;
+    margin: 20px auto;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+select, input[type="file"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+}
+
+.inputSelect {
+    width: 50%;
+    padding: 8px;
+    margin-bottom: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 8px;
+    text-align: center;
+}
+
+button {
+    padding: 10px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+button.next {
+    background-color: #4CAF50;
+    color: #fff;
+}
+
+button.cancel {
+    background-color: #fff;
+    color: #000;
+    margin-left: 10px;
+}

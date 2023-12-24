@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Import Products</title>
+    <link rel="stylesheet" href="task-2.css">
+</head>
+
+<body>
+    <form enctype="multipart/form-data" method="post" action="upload.php">
+        <h1>Import Products</h1>
+        <hr>
+
+        <p><strong>Step 1: Select file</strong></p>
+        <label for="file">Choose a file:</label>
+        <input type="file" name="file" id="file" accept=".csv, .json" onchange="displayAvailableFields(this.value);">
+        <p>Supported file formats: CSV, JSON</p>
+        <br>
+        
+        <p><strong>Step 2: Specify format</strong></p>
+        <label for="fileType">File Type:</label>
+        <select class="inputSelect" name="fileType" id="fileType" onchange="updateOptions()">
+            <option value=""></option>
+            <option value="csv">CSV</option>
+            <option value="json">JSON</option>
+        </select>
+        <br>
+
+        <label for="charEncoding">Character Encoding:</label>
+        <select class="inputSelect" name="charEncoding" id="charEncoding">
+            <!-- <option value="utf8">UTF-8</option>
+            <option value="utf16">UTF-16</option>
+            <option value="utf32">UTF-32</option> -->
+        </select>
+        <br>
+
+        <label for="delimiter">Delimiter:</label>
+        <select class="inputSelect" name="delimiter" id="delimiter">
+            <!-- <option value="none">None</option>
+            <option value="comma">, (Comma)</option> -->
+        </select>
+        <br>
+
+        <label>Has Header:</label> <input type="checkbox" name="hasHeader" value="yes" checked> Yes
+        <br>
+
+        <p><strong>Step 3: Display Handling</strong></p>
+        <label>Select the fields to be displayed:</label>
+        <table id="columns">
+            <tr>
+                <td>Available Fields</td>
+                <td> </td>
+                <td>Fields to be displayed</td>
+            </tr>
+            <tr>
+                <td>
+                    <select id="availableFields" multiple>
+                    </select>
+                </td>
+                <td>
+                    <div class="button-container">
+                        <button type="submit" class="cancel"> <strong>>></strong> </button>
+                    </div>
+                    <p> </p>
+                    <div class="button-container">
+                        <button type="button" class="cancel"> <strong><<</strong> </button>
+                    </div>
+                </td>
+                <td>
+                    <select id="displayedFields" multiple>
+                    </select>
+                </td>
+            </tr>
+        </table>
+
+        <p><strong>Step 4: Display Data</strong></p>
+        <!-- Display the data in table format with Title, Price ordered based on descending popularity -->
+
+        <div style="float: right;">
+            <button type="submit" class="next">Next</button>
+            <button type="button" class="cancel" onclick="location.reload()">Cancel</button>
+        </div>
+
+    </form>
+
+    <script>
+        function updateOptions() {
+            var fileType = document.getElementById('fileType').value;
+            var charEncoding = document.getElementById('charEncoding');
+            var delimiter = document.getElementById('delimiter');
+
+            charEncoding.innerHTML = '';
+            delimiter.innerHTML = '';
+
+            if (fileType === 'csv') {
+                var csvEncodings = ['UTF-8'];
+                var csvDelimiters = [', (Comma)'];
+
+                csvEncodings.forEach(function (encoding) {
+                    var option = document.createElement('option');
+                    option.value = encoding;
+                    option.textContent = encoding;
+                    charEncoding.appendChild(option);
+                });
+
+                csvDelimiters.forEach(function (delim) {
+                    var option = document.createElement('option');
+                    option.value = delim;
+                    option.textContent = delim;
+                    delimiter.appendChild(option);
+                });
+            } else if (fileType === 'json') {
+                var jsonEncodings = ['UTF-8', 'UTF-16', 'UTF-32'];
+                var jsonDelimiters = ['None'];
+
+                jsonEncodings.forEach(function (encoding) {
+                    var option = document.createElement('option');
+                    option.value = encoding;
+                    option.textContent = encoding;
+                    charEncoding.appendChild(option);
+                });
+
+                jsonDelimiters.forEach(function (delim) {
+                    var option = document.createElement('option');
+                    option.value = delim;
+                    option.textContent = delim;
+                    delimiter.appendChild(option);
+                });
+            }
+        }
+
+        function clearOptions(selectElement) {
+            selectElement.innerHTML = '';
+        }
+    
+        function addOption(selectElement, value, text) {
+            var option = document.createElement('option');
+            option.value = value;
+            option.textContent = text;
+            selectElement.appendChild(option);
+        }
+    
+        function displayAvailableFields() {
+            var fileInput = document.getElementById('file');
+            var file = fileInput.files[0];
+    
+            if (file) {
+                var reader = new FileReader();
+    
+                reader.onload = function (e) {
+                    var content = e.target.result;
+                    var lines = content.split('\n');
+                    var availableFieldsSelect = document.getElementById('availableFields');
+    
+                    // Clear existing options
+                    clearOptions(availableFieldsSelect);
+    
+                    // Display each field in the available fields select
+                    var fields = lines[0].split(',').map(field => field.trim());
+                    fields.forEach(function (field) {
+                        // Add the field to the available fields select
+                        addOption(availableFieldsSelect, field, field);
+                    });
+                };
+    
+                reader.readAsText(file);
+            }
+        }
+    
+
+        function moveItem(sourceId, destinationId) {
+            var source = document.getElementById(sourceId);
+            var destination = document.getElementById(destinationId);
+
+            for (var i = 0; i < source.options.length; i++) {
+                if (source.options[i].selected) {
+                    var option = source.options[i];
+                    destination.appendChild(option);
+                    i--; // Adjust index after removal
+                }
+            }
+        }
+    </script>
+
+</body>
+</html>
